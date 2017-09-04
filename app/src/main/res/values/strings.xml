@@ -1,10 +1,23 @@
 <resources>
     <string name="app_name">Demo App</string>
-    <string name="google">Sign in with google</string>
+    <string name="google">continue with google</string>
     <string name="authentication_failed">Authentication failed</string>
     <string name="message_dialog_signing_in">Signing in . . .</string>
     <string name="sign_out">Sign out</string>
-    <string name="sign_in_facebook">sign in with facebook</string>
+    <string name="sign_in_facebook">continue with facebook</string>
     <string name="authenticating">Authenticating . . .</string>
-    <string name="app_id">1855067568100132</string>
+    <string name="app_id">2008262402741279</string>
+    <string name="prompt_name">NAME</string>
+    <string name="action_sign_in">SIGN IN</string>
+    <string name="action_register">REGISTER</string>
+    <string name="prompt_email">EMAIL</string>
+    <string name="prompt_password">PASSWORD</string>
+    <string name="action_sign_in_short">SIGN IN</string>
+    <string name="prompt_confirm_password">CONFIRM PASSWORD</string>
+    <string name="message_dialog_registering">Registering user . . .</string>
+    <string name="error_registration">All fields are mandatory</string>
+    <string name="error_password">Password does not match !</string>
+    <string name="title_activity_dashboard">Dashboard</string>
+    <string name="name_of_user">nameofuser</string>
+    <string name="welcome_note">Welcome,</string>
 </resources>

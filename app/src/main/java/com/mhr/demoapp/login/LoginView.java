@@ -1,5 +1,6 @@
 package com.mhr.demoapp.login;
 
+import com.facebook.CallbackManager;
 import com.google.android.gms.common.api.GoogleApiClient;
 
 /**
@@ -7,5 +8,5 @@ import com.google.android.gms.common.api.GoogleApiClient;
  */
 
 public interface LoginView {
-    void onLoginLoaded(GoogleApiClient googleApiClient);
+    void onLoginLoaded(GoogleApiClient googleApiClient, CallbackManager mCallbackManager);
 }
