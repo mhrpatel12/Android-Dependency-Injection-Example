@@ -74,35 +74,19 @@
                     android:id="@+id/btn_sign_in_google"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:drawableStart="@drawable/ic_google"
                     android:onClick="onClickSignInGoogle"
                     android:text="@string/google" />
 
-                <FrameLayout
-                    android:id="@+id/layout_facebook_custom"
+                <android.support.v7.widget.AppCompatButton
+                    android:id="@+id/button_facebook"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:background="@android:color/transparent">
-
-                    <ImageView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_gravity="center_vertical"
-                        android:background="@android:color/transparent"
-                        android:elevation="5dp"
-                        android:paddingEnd="10dp"
-                        android:paddingStart="10dp"
-                        android:src="@drawable/ic_facebook" />
-
-                    <android.support.v7.widget.AppCompatButton
-                        android:id="@+id/button_facebook"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:elevation="1dp"
-                        android:padding="15dp"
-                        android:text="@string/sign_in_facebook"
-                        android:textAlignment="center" />
-
-                </FrameLayout>
+                    android:drawableStart="@drawable/ic_facebook"
+                    android:elevation="1dp"
+                    android:padding="15dp"
+                    android:text="@string/sign_in_facebook"
+                    android:textAlignment="center" />
 
                 <RelativeLayout
                     android:id="@+id/layout_facebook"
