@@ -8,7 +8,6 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.FragmentActivity;
-import android.support.v4.content.ContextCompat;
 import android.view.View;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -26,6 +25,7 @@ import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.mhr.demoapp.R;
+import com.mhr.demoapp.login.LoginActivity;
 
 import java.text.DateFormat;
 import java.util.Date;
@@ -52,7 +52,6 @@ public class DashboardActivity extends FragmentActivity implements DashboardView
         AndroidInjection.inject(this);
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_dashboard);
-        checkPermission();
         MapFragment mapFragment = (MapFragment) getFragmentManager()
                 .findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
@@ -78,7 +77,9 @@ public class DashboardActivity extends FragmentActivity implements DashboardView
 
     @Override
     public void onSignedOut() {
-        finish();
+        Intent intent = new Intent(DashboardActivity.this, LoginActivity.class);
+        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+        startActivity(intent);
     }
 
     public void onClickLogout(View view) {
@@ -101,27 +102,6 @@ public class DashboardActivity extends FragmentActivity implements DashboardView
         System.exit(0);
     }
 
-    public void checkPermission() {
-        if ((ContextCompat.checkSelfPermission(this,
-                android.Manifest.permission.ACCESS_FINE_LOCATION)
-                != PackageManager.PERMISSION_GRANTED)
-                ||
-                (ContextCompat.checkSelfPermission(this,
-                        android.Manifest.permission.ACCESS_COARSE_LOCATION)
-                        != PackageManager.PERMISSION_GRANTED)) {
-            if ((ActivityCompat.shouldShowRequestPermissionRationale(this,
-                    android.Manifest.permission.ACCESS_FINE_LOCATION))
-                    &&
-                    (ActivityCompat.shouldShowRequestPermissionRationale(this,
-                            android.Manifest.permission.ACCESS_COARSE_LOCATION))) {
-            } else {
-                ActivityCompat.requestPermissions(this,
-                        new String[]{android.Manifest.permission.ACCESS_FINE_LOCATION,
-                                android.Manifest.permission.ACCESS_COARSE_LOCATION},
-                        1);
-            }
-        }
-    }
 
     @Override
     public void onRequestPermissionsResult(int requestCode,
@@ -146,7 +126,6 @@ public class DashboardActivity extends FragmentActivity implements DashboardView
     @Override
     public void onConnected(@Nullable Bundle bundle) {
         if (ActivityCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-            checkPermission();
             return;
         }
         mLastLocation = LocationServices.FusedLocationApi.getLastLocation(

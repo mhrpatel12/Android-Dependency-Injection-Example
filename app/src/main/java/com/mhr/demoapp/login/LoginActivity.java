@@ -6,6 +6,8 @@ import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.v4.app.ActivityCompat;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.AppCompatButton;
 import android.util.Base64;
@@ -63,6 +65,7 @@ public class LoginActivity extends AppCompatActivity implements LoginView {
         super.onCreate(savedInstanceState);
         FacebookSdk.sdkInitialize(getApplicationContext());
         setContentView(R.layout.activity_login);
+        checkPermission();
         ((View) findViewById(R.id.rootView)).getViewTreeObserver().addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
             @Override
             public void onGlobalLayout() {
@@ -114,6 +117,28 @@ public class LoginActivity extends AppCompatActivity implements LoginView {
         }
     }
 
+    public void checkPermission() {
+        if ((ContextCompat.checkSelfPermission(this,
+                android.Manifest.permission.ACCESS_FINE_LOCATION)
+                != PackageManager.PERMISSION_GRANTED)
+                ||
+                (ContextCompat.checkSelfPermission(this,
+                        android.Manifest.permission.ACCESS_COARSE_LOCATION)
+                        != PackageManager.PERMISSION_GRANTED)) {
+            if ((ActivityCompat.shouldShowRequestPermissionRationale(this,
+                    android.Manifest.permission.ACCESS_FINE_LOCATION))
+                    &&
+                    (ActivityCompat.shouldShowRequestPermissionRationale(this,
+                            android.Manifest.permission.ACCESS_COARSE_LOCATION))) {
+            } else {
+                ActivityCompat.requestPermissions(this,
+                        new String[]{android.Manifest.permission.ACCESS_FINE_LOCATION,
+                                android.Manifest.permission.ACCESS_COARSE_LOCATION},
+                        1);
+            }
+        }
+    }
+
     @Override
     public void onLoginLoaded(GoogleApiClient googleApiClient, CallbackManager mCallbackManager, FirebaseAuth mAuth) {
         try {
@@ -161,28 +186,48 @@ public class LoginActivity extends AppCompatActivity implements LoginView {
         ((AppCompatButton) findViewById(R.id.button_facebook)).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                loginButton.performClick();
-                //loginPresenter.loginWithFacebook();
+                if (loginPresenter.isGPSEnables()) {
+                    loginPresenter.hideKeyboard();
+                    loginButton.performClick();
+                } else {
+                    loginPresenter.buildAlertMessageNoGps();
+                }
             }
         });
     }
 
     public void onClickSignInGoogle(View v) {
-        loginPresenter.showProgress(getString(R.string.message_dialog_signing_in));
-        Intent signInIntent = Auth.GoogleSignInApi.getSignInIntent(this.googleApiClient);
-        googleApiClientSignOut();
-        startActivityForResult(signInIntent, RC_SIGN_IN);
+        loginPresenter.hideKeyboard();
+        if (loginPresenter.isGPSEnables()) {
+            loginPresenter.showProgress(getString(R.string.message_dialog_signing_in));
+            Intent signInIntent = Auth.GoogleSignInApi.getSignInIntent(this.googleApiClient);
+            googleApiClientSignOut();
+            startActivityForResult(signInIntent, RC_SIGN_IN);
+        } else {
+            loginPresenter.buildAlertMessageNoGps();
+        }
     }
 
     public void onClickSignIn(View v) {
-        loginPresenter.initiateLogin();
+        loginPresenter.hideKeyboard();
+        if (loginPresenter.isGPSEnables()) {
+            loginPresenter.initiateLogin();
+        } else {
+            loginPresenter.buildAlertMessageNoGps();
+        }
     }
 
     public void onClickRegister(View v) {
-        loginPresenter.initiateRegistration();
+        loginPresenter.hideKeyboard();
+        if (loginPresenter.isGPSEnables()) {
+            loginPresenter.initiateRegistration();
+        } else {
+            loginPresenter.buildAlertMessageNoGps();
+        }
     }
 
     public void onClickLayout(View v) {
+        loginPresenter.hideKeyboard();
         loginPresenter.toggleViews();
     }
 

@@ -9,16 +9,20 @@ import android.location.LocationManager;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.design.widget.Snackbar;
+import android.support.design.widget.TextInputLayout;
 import android.support.v4.app.FragmentActivity;
 import android.support.v7.app.AlertDialog;
 import android.util.Log;
 import android.view.View;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 import android.widget.LinearLayout;
-import android.widget.Toast;
+import android.widget.TextView;
 
 import com.facebook.AccessToken;
 import com.facebook.CallbackManager;
+import com.facebook.login.LoginManager;
 import com.google.android.gms.auth.api.Auth;
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
@@ -36,15 +40,18 @@ import com.mhr.demoapp.R;
 import com.mhr.demoapp.dashboard.DashboardActivity;
 import com.mhr.demoapp.data.DatabaseService;
 
+import java.util.regex.Pattern;
+
 import javax.inject.Inject;
 
 /**
- * Created by mertsimsek on 25/05/2017.
+ * Created by Mihir on 05/09/2017.
  */
 
 public class LoginPresenterImpl implements LoginPresenter, GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener {
     private static final String TAG = "Facebook/Google Login";
-
+    public static final Pattern VALID_EMAIL_ADDRESS_REGEX =
+            Pattern.compile("^[A-Z0-9._%+-]+@[A-Z0-9.-]+\\.[A-Z]{2,6}$", Pattern.CASE_INSENSITIVE);
     private LoginView mainView;
     private DatabaseService databaseService;
     private GoogleApiClient googleApiClient;
@@ -62,11 +69,17 @@ public class LoginPresenterImpl implements LoginPresenter, GoogleApiClient.Conne
 
     private EditText edtEmailLogin;
     private EditText edtPasswordLogin;
+    private TextInputLayout layoutEmailLogin;
+    private TextInputLayout layoutPasswordLogin;
 
     private EditText edtEmailRegistration;
     private EditText edtPasswordRegistration;
     private EditText edtConfirmPasswordRegistration;
     private EditText edtName;
+    private TextInputLayout layoutEmailRegistration;
+    private TextInputLayout layoutPasswordRegistration;
+    private TextInputLayout layoutConfirmPasswordRegistration;
+    private TextInputLayout layoutName;
 
     @Inject
     public LoginPresenterImpl(final Activity activity, LoginView loginView, DatabaseService databaseService) {
@@ -74,6 +87,7 @@ public class LoginPresenterImpl implements LoginPresenter, GoogleApiClient.Conne
         this.databaseService = databaseService;
         this.activity = activity;
         progressDialog = new ProgressDialog(activity);
+        progressDialog.setCancelable(false);
     }
 
     @Override
@@ -83,11 +97,17 @@ public class LoginPresenterImpl implements LoginPresenter, GoogleApiClient.Conne
 
         edtEmailLogin = (EditText) activity.findViewById(R.id.edtEmailLogin);
         edtPasswordLogin = (EditText) activity.findViewById(R.id.edtPasswordLogin);
+        layoutEmailLogin = (TextInputLayout) activity.findViewById(R.id.layoutEmailLogin);
+        layoutPasswordLogin = (TextInputLayout) activity.findViewById(R.id.layoutPasswordLogin);
 
         edtEmailRegistration = (EditText) activity.findViewById(R.id.edtEmailRegistration);
         edtPasswordRegistration = (EditText) activity.findViewById(R.id.edtPasswordRegistration);
         edtConfirmPasswordRegistration = (EditText) activity.findViewById(R.id.edtConfirmPasswordRegistration);
         edtName = (EditText) activity.findViewById(R.id.edtNameRegistration);
+        layoutEmailRegistration = (TextInputLayout) activity.findViewById(R.id.layoutEmailRegistration);
+        layoutPasswordRegistration = (TextInputLayout) activity.findViewById(R.id.layoutPasswordRegistration);
+        layoutConfirmPasswordRegistration = (TextInputLayout) activity.findViewById(R.id.layoutConfirmPasswordRegistration);
+        layoutName = (TextInputLayout) activity.findViewById(R.id.layoutNameRegistration);
 
         mCallbackManager = CallbackManager.Factory.create();
         manager = (LocationManager) activity.getSystemService(Context.LOCATION_SERVICE);
@@ -116,15 +136,55 @@ public class LoginPresenterImpl implements LoginPresenter, GoogleApiClient.Conne
     }
 
     private boolean isRegistrationFormComplete() {
-        return (!(edtEmailRegistration.getText().toString().trim()).equals(""))
-                && (!((edtName.getText().toString().trim()).equals("")))
-                && (!((edtPasswordRegistration.getText().toString().trim()).equals("")))
-                && (!(edtConfirmPasswordRegistration.getText().toString().trim()).equals(""));
+        boolean isRegistrationComplete = true;
+
+        layoutEmailRegistration.setError(null);
+        layoutPasswordRegistration.setError(null);
+        layoutConfirmPasswordRegistration.setError(null);
+        layoutName.setError(null);
+
+        if ((edtEmailRegistration.getText().toString().trim()).equals("")) {
+            isRegistrationComplete = false;
+            layoutEmailRegistration.setError(activity.getString(R.string.error_mandatory));
+        }
+        if ((edtPasswordRegistration.getText().toString().trim()).equals("")) {
+            isRegistrationComplete = false;
+            layoutPasswordRegistration.setError(activity.getString(R.string.error_mandatory));
+        }
+        if ((edtConfirmPasswordRegistration.getText().toString().trim()).equals("")) {
+            isRegistrationComplete = false;
+            layoutConfirmPasswordRegistration.setError(activity.getString(R.string.error_mandatory));
+        }
+        if ((edtName.getText().toString().trim()).equals("")) {
+            isRegistrationComplete = false;
+            layoutName.setError(activity.getString(R.string.error_mandatory));
+        }
+        if (!(edtEmailRegistration.getText().toString().trim()).equals("") && !VALID_EMAIL_ADDRESS_REGEX.matcher(edtEmailRegistration.getText().toString().trim()).find()) {
+            isRegistrationComplete = false;
+            layoutEmailRegistration.setError(activity.getString(R.string.error_invalid_email));
+        }
+
+        return isRegistrationComplete;
     }
 
     private boolean isLoginFormComplete() {
-        return (!(edtEmailLogin.getText().toString().trim()).equals(""))
-                && (!((edtPasswordLogin.getText().toString().trim()).equals("")));
+        boolean isLoginComplete = true;
+        layoutEmailLogin.setError(null);
+        layoutPasswordLogin.setError(null);
+        if ((edtEmailLogin.getText().toString().trim()).equals("")) {
+            isLoginComplete = false;
+            layoutEmailLogin.setError(activity.getString(R.string.error_mandatory));
+        }
+        if ((edtPasswordLogin.getText().toString().trim()).equals("")) {
+            isLoginComplete = false;
+            layoutPasswordLogin.setError(activity.getString(R.string.error_mandatory));
+        }
+        if (!(edtEmailLogin.getText().toString().trim()).equals("") && !VALID_EMAIL_ADDRESS_REGEX.matcher(edtEmailLogin.getText().toString().trim()).find()) {
+            isLoginComplete = false;
+            layoutEmailLogin.setError(activity.getString(R.string.error_invalid_email));
+        }
+
+        return isLoginComplete;
     }
 
     private boolean verifyPassword() {
@@ -143,33 +203,26 @@ public class LoginPresenterImpl implements LoginPresenter, GoogleApiClient.Conne
     }
 
     @Override
+    public boolean isGPSEnables() {
+        return manager.isProviderEnabled(LocationManager.GPS_PROVIDER);
+    }
+
+    @Override
     public void initiateLogin() {
-        if (!manager.isProviderEnabled(LocationManager.GPS_PROVIDER)) {
-            buildAlertMessageNoGps();
-        } else {
-            if (isLoginFormComplete()) {
-                showProgress(activity.getString(R.string.message_dialog_signing_in));
-                attemptLoginByEmailPassword(edtEmailLogin.getText().toString(), edtPasswordLogin.getText().toString());
-            } else {
-                Toast.makeText(activity, activity.getString(R.string.error_registration), Toast.LENGTH_LONG).show();
-            }
+        if (isLoginFormComplete()) {
+            showProgress(activity.getString(R.string.message_dialog_signing_in));
+            attemptLoginByEmailPassword(edtEmailLogin.getText().toString(), edtPasswordLogin.getText().toString());
         }
     }
 
     @Override
     public void initiateRegistration() {
-        if (!manager.isProviderEnabled(LocationManager.GPS_PROVIDER)) {
-            buildAlertMessageNoGps();
-        } else {
-            if (isRegistrationFormComplete()) {
-                if (verifyPassword()) {
-                    showProgress(activity.getString(R.string.message_dialog_registering));
-                    attemptRegistrationByEmailPassword(edtEmailRegistration.getText().toString(), edtPasswordRegistration.getText().toString());
-                } else {
-                    Toast.makeText(activity, activity.getString(R.string.error_password), Toast.LENGTH_LONG).show();
-                }
+        if (isRegistrationFormComplete()) {
+            if (verifyPassword()) {
+                showProgress(activity.getString(R.string.message_dialog_registering));
+                attemptRegistrationByEmailPassword(edtEmailRegistration.getText().toString(), edtPasswordRegistration.getText().toString());
             } else {
-                Toast.makeText(activity, activity.getString(R.string.error_registration), Toast.LENGTH_LONG).show();
+                Snackbar.make(layoutLogin, activity.getString(R.string.error_password), Snackbar.LENGTH_LONG).show();
             }
         }
     }
@@ -185,10 +238,6 @@ public class LoginPresenterImpl implements LoginPresenter, GoogleApiClient.Conne
                                 progressDialog.dismiss();
                             }
                             Log.d(TAG, "signInWithEmail:success");
-                            Toast.makeText(activity, "Authentication success.",
-                                    Toast.LENGTH_LONG).show();
-                            FirebaseUser user = mAuth.getCurrentUser();
-
                             startDashboardActivity(edtName.getText().toString());
                         } else {
                             // If sign in fails, display a message to the user.
@@ -196,8 +245,7 @@ public class LoginPresenterImpl implements LoginPresenter, GoogleApiClient.Conne
                                 progressDialog.dismiss();
                             }
                             Log.w(TAG, "signInWithEmail:failure", task.getException());
-                            Toast.makeText(activity, "Authentication failed.",
-                                    Toast.LENGTH_LONG).show();
+                            Snackbar.make(layoutLogin, task.getException() + "", Snackbar.LENGTH_LONG).show();
                         }
                     }
                 });
@@ -214,11 +262,7 @@ public class LoginPresenterImpl implements LoginPresenter, GoogleApiClient.Conne
                                 progressDialog.dismiss();
                             }
                             Log.d(TAG, "createUserWithEmail:success");
-
                             FirebaseUser user = mAuth.getCurrentUser();
-
-                            Toast.makeText(activity, "Registration success.",
-                                    Toast.LENGTH_LONG).show();
                             onEmailSuccess(user);
                         } else {
                             // If sign in fails, display a message to the user.
@@ -226,8 +270,7 @@ public class LoginPresenterImpl implements LoginPresenter, GoogleApiClient.Conne
                                 progressDialog.dismiss();
                             }
                             Log.w(TAG, "createUserWithEmail:failure", task.getException());
-                            Toast.makeText(activity, task.getException() + "",
-                                    Toast.LENGTH_LONG).show();
+                            Snackbar.make(layoutLogin, task.getException() + "", Snackbar.LENGTH_LONG).show();
                         }
                     }
                 });
@@ -253,8 +296,15 @@ public class LoginPresenterImpl implements LoginPresenter, GoogleApiClient.Conne
 
                         if (!task.isSuccessful()) {
                             Log.w(TAG, "signInWithCredential", task.getException());
-                            Toast.makeText(activity, "Authentication failed.",
-                                    Toast.LENGTH_SHORT).show();
+                            Snackbar snackbar = Snackbar.make(layoutLogin, task.getException() + "", Snackbar.LENGTH_INDEFINITE);
+                            ((TextView) snackbar.getView().findViewById(android.support.design.R.id.snackbar_text)).setSingleLine(false);
+                            snackbar.setAction(android.R.string.ok, new View.OnClickListener() {
+                                @Override
+                                public void onClick(View v) {
+                                }
+                            });
+                            snackbar.show();
+                            LoginManager.getInstance().logOut();
                         } else if (task.isSuccessful()) {
                             onAuthSuccess(task.getResult().getUser());
                         }
@@ -286,8 +336,14 @@ public class LoginPresenterImpl implements LoginPresenter, GoogleApiClient.Conne
                         // signed in user can be handled in the listener.
                         if (!task.isSuccessful()) {
                             Log.w(TAG, "signInWithCredential", task.getException());
-                            Toast.makeText(activity, "Authentication failed.",
-                                    Toast.LENGTH_SHORT).show();
+                            Snackbar snackbar = Snackbar.make(layoutLogin, task.getException() + "", Snackbar.LENGTH_INDEFINITE);
+                            ((TextView) snackbar.getView().findViewById(android.support.design.R.id.snackbar_text)).setSingleLine(false);
+                            snackbar.setAction(android.R.string.ok, new View.OnClickListener() {
+                                @Override
+                                public void onClick(View v) {
+                                }
+                            });
+                            snackbar.show();
                         } else if (task.isSuccessful()) {
                             onAuthSuccess(task.getResult().getUser());
                         }
@@ -316,6 +372,15 @@ public class LoginPresenterImpl implements LoginPresenter, GoogleApiClient.Conne
     }
 
     @Override
+    public void hideKeyboard() {
+        View view = activity.getCurrentFocus();
+        if (view != null) {
+            InputMethodManager imm = (InputMethodManager) activity.getSystemService(Context.INPUT_METHOD_SERVICE);
+            imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
+        }
+    }
+
+    @Override
     public void showProgress(String dialogMessage) {
         if (!progressDialog.isShowing()) {
             progressDialog.setMessage(dialogMessage);
@@ -330,6 +395,7 @@ public class LoginPresenterImpl implements LoginPresenter, GoogleApiClient.Conne
         }
     }
 
+    @Override
     public void buildAlertMessageNoGps() {
         final AlertDialog.Builder builder = new AlertDialog.Builder(activity);
         builder.setMessage(activity.getString(R.string.prompt_location_on))

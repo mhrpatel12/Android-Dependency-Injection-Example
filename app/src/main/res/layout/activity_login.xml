@@ -30,6 +30,7 @@
                 android:orientation="vertical">
 
                 <android.support.design.widget.TextInputLayout
+                    android:id="@+id/layoutEmailLogin"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content">
 
@@ -44,6 +45,7 @@
                 </android.support.design.widget.TextInputLayout>
 
                 <android.support.design.widget.TextInputLayout
+                    android:id="@+id/layoutPasswordLogin"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content">
 
@@ -62,13 +64,11 @@
 
                 <Button
                     android:id="@+id/btnSignIn"
-                    style="?android:textAppearanceSmall"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="16dp"
                     android:onClick="onClickSignIn"
-                    android:text="@string/action_sign_in"
-                    android:textStyle="bold" />
+                    android:text="@string/action_sign_in" />
 
                 <Button
                     android:id="@+id/btn_sign_in_google"
@@ -125,6 +125,7 @@
                 android:visibility="gone">
 
                 <android.support.design.widget.TextInputLayout
+                    android:id="@+id/layoutNameRegistration"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content">
 
@@ -133,13 +134,13 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:hint="@string/prompt_name"
-                        android:imeOptions="actionDone"
                         android:inputType="text"
                         android:maxLines="1" />
 
                 </android.support.design.widget.TextInputLayout>
 
                 <android.support.design.widget.TextInputLayout
+                    android:id="@+id/layoutEmailRegistration"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content">
 
@@ -154,6 +155,7 @@
                 </android.support.design.widget.TextInputLayout>
 
                 <android.support.design.widget.TextInputLayout
+                    android:id="@+id/layoutPasswordRegistration"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content">
 
@@ -171,6 +173,7 @@
                 </android.support.design.widget.TextInputLayout>
 
                 <android.support.design.widget.TextInputLayout
+                    android:id="@+id/layoutConfirmPasswordRegistration"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content">
 
@@ -188,13 +191,11 @@
 
                 <Button
                     android:id="@+id/btnRegisterUser"
-                    style="?android:textAppearanceSmall"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="16dp"
                     android:onClick="onClickRegister"
-                    android:text="@string/action_register"
-                    android:textStyle="bold" />
+                    android:text="@string/action_register" />
 
             </LinearLayout>
 

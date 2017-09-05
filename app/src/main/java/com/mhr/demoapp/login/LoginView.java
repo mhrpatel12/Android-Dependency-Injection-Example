@@ -5,7 +5,7 @@ import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.firebase.auth.FirebaseAuth;
 
 /**
- * Created by mertsimsek on 25/05/2017.
+ * Created by Mihir on 05/09/2017.
  */
 
 public interface LoginView {

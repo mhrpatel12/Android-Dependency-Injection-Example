@@ -9,7 +9,7 @@ import dagger.Component;
 import dagger.android.AndroidInjectionModule;
 
 /**
- * Created by mertsimsek on 25/05/2017.
+ * Created by Mihir on 05/09/2017.
  */
 @Component(modules = {
         AndroidInjectionModule.class,

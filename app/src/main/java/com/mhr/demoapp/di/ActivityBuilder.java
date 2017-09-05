@@ -14,7 +14,7 @@ import dagger.android.AndroidInjector;
 import dagger.multibindings.IntoMap;
 
 /**
- * Created by mertsimsek on 25/05/2017.
+ * Created by Mihir on 05/09/2017.
  */
 @Module
 public abstract class ActivityBuilder {

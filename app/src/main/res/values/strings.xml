@@ -28,4 +28,6 @@
     <string name="text_longitude">Longitude</string>
     <string name="fetching_history">Fetching user history . . .</string>
     <string name="action_logout">LOGOUT</string>
+    <string name="error_mandatory">* mandatory</string>
+    <string name="error_invalid_email">Invalid Email.</string>
 </resources>

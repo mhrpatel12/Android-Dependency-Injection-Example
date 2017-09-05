@@ -11,6 +11,7 @@ import android.support.v4.app.FragmentActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 
+import com.facebook.login.LoginManager;
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
@@ -30,7 +31,7 @@ import java.util.ArrayList;
 import javax.inject.Inject;
 
 /**
- * Created by mertsimsek on 25/05/2017.
+ * Created by Mihir on 05/09/2017.
  */
 
 public class DashboardPresenterImpl implements DashboardPresenter, GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener {
@@ -57,6 +58,7 @@ public class DashboardPresenterImpl implements DashboardPresenter, GoogleApiClie
         this.databaseService = databaseService;
         this.activity = activity;
         progressDialog = new ProgressDialog(activity);
+        progressDialog.setCancelable(false);
     }
 
     @Override
@@ -75,28 +77,29 @@ public class DashboardPresenterImpl implements DashboardPresenter, GoogleApiClie
         userHistoryAdapter = new UserHistoryAdapter(userHistoryArrayList, R.layout.list_item_user_history, activity);
         recyclerViewCommits.setAdapter(userHistoryAdapter);
 
-        databaseService.mDatabase.child(activity.getString(R.string.table_users_history)).
-                child(mAuth.getCurrentUser().getUid())
-                .addValueEventListener(new ValueEventListener() {
-                    @Override
-                    public void onDataChange(DataSnapshot dataSnapshot) {
-                        if (dataSnapshot.exists()) {
-                            userHistoryArrayList.clear();
-                            for (DataSnapshot ds : dataSnapshot.getChildren()) {
-                                UserHistory userHistory = ds.getValue(UserHistory.class);
-                                userHistoryArrayList.add(userHistory);
+        if (mAuth.getCurrentUser() != null) {
+            databaseService.mDatabase.child(activity.getString(R.string.table_users_history)).
+                    child(mAuth.getCurrentUser().getUid())
+                    .addValueEventListener(new ValueEventListener() {
+                        @Override
+                        public void onDataChange(DataSnapshot dataSnapshot) {
+                            if (dataSnapshot.exists()) {
+                                userHistoryArrayList.clear();
+                                for (DataSnapshot ds : dataSnapshot.getChildren()) {
+                                    UserHistory userHistory = ds.getValue(UserHistory.class);
+                                    userHistoryArrayList.add(userHistory);
+                                }
+                                userHistoryAdapter.notifyDataSetChanged();
                             }
-                            userHistoryAdapter.notifyDataSetChanged();
+                            hideProgress();
                         }
-                        hideProgress();
-                    }
 
-                    @Override
-                    public void onCancelled(DatabaseError databaseError) {
+                        @Override
+                        public void onCancelled(DatabaseError databaseError) {
 
-                    }
-                });
-
+                        }
+                    });
+        }
         // Configure Google Sign In
         GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
                 .requestIdToken(activity.getString(R.string.default_web_client_id))
@@ -146,6 +149,7 @@ public class DashboardPresenterImpl implements DashboardPresenter, GoogleApiClie
     @Override
     public void logout() {
         mAuth.signOut();
+        LoginManager.getInstance().logOut();
         mainView.onSignedOut();
     }
 

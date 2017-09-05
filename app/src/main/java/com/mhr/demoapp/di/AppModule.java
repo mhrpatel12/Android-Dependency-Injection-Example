@@ -12,7 +12,7 @@ import dagger.Module;
 import dagger.Provides;
 
 /**
- * Created by mertsimsek on 25/05/2017.
+ * Created by Mihir on 05/09/2017.
  */
 @Module(subcomponents = {
         LoginActivityComponent.class,
