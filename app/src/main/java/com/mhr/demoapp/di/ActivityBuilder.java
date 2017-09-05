@@ -2,6 +2,8 @@ package com.mhr.demoapp.di;
 
 import android.app.Activity;
 
+import com.mhr.demoapp.dashboard.DashboardActivity;
+import com.mhr.demoapp.dashboard.DashboardActivityComponent;
 import com.mhr.demoapp.login.LoginActivity;
 import com.mhr.demoapp.login.LoginActivityComponent;
 
@@ -21,4 +23,9 @@ public abstract class ActivityBuilder {
     @IntoMap
     @ActivityKey(LoginActivity.class)
     abstract AndroidInjector.Factory<? extends Activity> bindMainActivity(LoginActivityComponent.Builder builder);
+
+    @Binds
+    @IntoMap
+    @ActivityKey(DashboardActivity.class)
+    abstract AndroidInjector.Factory<? extends Activity> bindDetailActivity(DashboardActivityComponent.Builder builder);
 }

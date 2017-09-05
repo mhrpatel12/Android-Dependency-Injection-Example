@@ -1,6 +1,6 @@
 package com.mhr.demoapp.login;
 
-import com.mhr.demoapp.data.ApiService;
+import com.mhr.demoapp.data.DatabaseService;
 
 import dagger.Module;
 import dagger.Provides;
@@ -20,7 +20,7 @@ public class LoginActivityModule {
     }
 
     @Provides
-    LoginPresenter provideLoginPresenter(LoginView loginView, ApiService apiService) {
-        return new LoginPresenterImpl(loginActivity,loginView, apiService);
+    LoginPresenter provideLoginPresenter(LoginView loginView, DatabaseService databaseService) {
+        return new LoginPresenterImpl(loginActivity,loginView, databaseService);
     }
 }

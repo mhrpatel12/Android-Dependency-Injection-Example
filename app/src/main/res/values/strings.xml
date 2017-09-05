@@ -20,4 +20,12 @@
     <string name="title_activity_dashboard">Dashboard</string>
     <string name="name_of_user">nameofuser</string>
     <string name="welcome_note">Welcome,</string>
+    <string name="prompt_location_on">Your GPS seems to be disabled, do you want to enable it?</string>
+    <string name="table_users">users</string>
+    <string name="table_users_history">userHistory</string>
+    <string name="text_date_time">Date :</string>
+    <string name="text_latitude">Latitude</string>
+    <string name="text_longitude">Longitude</string>
+    <string name="fetching_history">Fetching user history . . .</string>
+    <string name="action_logout">LOGOUT</string>
 </resources>

@@ -1,14 +1,20 @@
 package com.mhr.demoapp.login;
 
+import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.AppCompatButton;
 import android.util.Base64;
+import android.util.DisplayMetrics;
 import android.util.Log;
+import android.util.TypedValue;
 import android.view.View;
+import android.view.ViewTreeObserver;
+import android.widget.LinearLayout;
 
 import com.facebook.CallbackManager;
 import com.facebook.FacebookCallback;
@@ -20,7 +26,10 @@ import com.google.android.gms.auth.api.Auth;
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
 import com.google.android.gms.auth.api.signin.GoogleSignInResult;
 import com.google.android.gms.common.api.GoogleApiClient;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.mhr.demoapp.R;
+import com.mhr.demoapp.dashboard.DashboardActivity;
 
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
@@ -38,6 +47,14 @@ public class LoginActivity extends AppCompatActivity implements LoginView {
 
     private CallbackManager mCallbackManager;
 
+    // [END declare_auth]
+    private FirebaseAuth mAuth;
+    // [START declare_auth]
+
+    // [END declare_auth_listener]
+    private FirebaseAuth.AuthStateListener mAuthListener;
+    // [START declare_auth_listener]
+
     private static final int RC_SIGN_IN = 9001;
 
     @Override
@@ -46,6 +63,38 @@ public class LoginActivity extends AppCompatActivity implements LoginView {
         super.onCreate(savedInstanceState);
         FacebookSdk.sdkInitialize(getApplicationContext());
         setContentView(R.layout.activity_login);
+        ((View) findViewById(R.id.rootView)).getViewTreeObserver().addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
+            @Override
+            public void onGlobalLayout() {
+                int heightDiff = ((View) findViewById(R.id.rootView)).getRootView().getHeight() - ((View) findViewById(R.id.rootView)).getHeight();
+                if (heightDiff > dpToPx(LoginActivity.this, 200)) { // if more than 200 dp, it's probably a keyboard...
+                    ((LinearLayout) findViewById(R.id.layout_bottom)).setVisibility(View.GONE);
+                } else {
+                    ((LinearLayout) findViewById(R.id.layout_bottom)).setVisibility(View.VISIBLE);
+                }
+            }
+        });
+        // [START auth_state_listener]
+        mAuthListener = new FirebaseAuth.AuthStateListener() {
+            @Override
+            public void onAuthStateChanged(@NonNull FirebaseAuth firebaseAuth) {
+                FirebaseUser user = firebaseAuth.getCurrentUser();
+                if (user != null) {
+                    // User is signed in
+                    Log.d(TAG, "onAuthStateChanged:signed_in:" + user.getUid());
+                    Intent intent = new Intent(LoginActivity.this, DashboardActivity.class);
+                    intent.putExtra(getString(R.string.name_of_user), user.getDisplayName());
+                    startActivity(intent);
+                } else {
+                    // User is signed out
+                    Log.d(TAG, "onAuthStateChanged:signed_out");
+                }
+                // [START_EXCLUDE]
+                loginPresenter.hideProgress();
+                // [END_EXCLUDE]
+            }
+        };
+        // [END auth_state_listener]
         loginPresenter.loadLogin();
     }
 
@@ -66,7 +115,7 @@ public class LoginActivity extends AppCompatActivity implements LoginView {
     }
 
     @Override
-    public void onLoginLoaded(GoogleApiClient googleApiClient, CallbackManager mCallbackManager) {
+    public void onLoginLoaded(GoogleApiClient googleApiClient, CallbackManager mCallbackManager, FirebaseAuth mAuth) {
         try {
             PackageInfo info = getPackageManager().getPackageInfo(getApplicationContext().getPackageName(), PackageManager.GET_SIGNATURES);
             for (android.content.pm.Signature signature : info.signatures) {
@@ -80,6 +129,7 @@ public class LoginActivity extends AppCompatActivity implements LoginView {
         } catch (NoSuchAlgorithmException e) {
         }
 
+        this.mAuth = mAuth;
         this.googleApiClient = googleApiClient;
         this.mCallbackManager = mCallbackManager;
 
@@ -141,5 +191,27 @@ public class LoginActivity extends AppCompatActivity implements LoginView {
             Auth.GoogleSignInApi.signOut(this.googleApiClient);
         } catch (Exception e) {
         }
+    }
+
+    // [START on_start_add_listener]
+    @Override
+    public void onStart() {
+        super.onStart();
+        mAuth.addAuthStateListener(mAuthListener);
+    }
+
+    // [START on_stop_remove_listener]
+    @Override
+    public void onStop() {
+        super.onStop();
+        if (mAuthListener != null) {
+            mAuth.removeAuthStateListener(mAuthListener);
+        }
+    }
+
+    // [END on_start_add_listener]
+    public static float dpToPx(Context context, float valueInDp) {
+        DisplayMetrics metrics = context.getResources().getDisplayMetrics();
+        return TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, valueInDp, metrics);
     }
 }
