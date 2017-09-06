@@ -11,7 +11,7 @@ import com.mhr.demoapp.login.model.User;
 import javax.inject.Inject;
 
 /**
- * Created by mertsimsek on 26/05/2017.
+ * Created by Mihir on 26/05/2017.
  */
 
 public class DatabaseService {
