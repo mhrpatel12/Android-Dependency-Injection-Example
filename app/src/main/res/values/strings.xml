@@ -6,7 +6,7 @@
     <string name="sign_out">Sign out</string>
     <string name="sign_in_facebook">continue with facebook</string>
     <string name="authenticating">Authenticating . . .</string>
-    <string name="app_id">2008262402741279</string>
+    <string name="app_id" translatable="false">2008262402741279</string>
     <string name="prompt_name">NAME</string>
     <string name="action_sign_in">SIGN IN</string>
     <string name="action_register">REGISTER</string>
@@ -18,11 +18,11 @@
     <string name="error_registration">All fields are mandatory</string>
     <string name="error_password">Password does not match !</string>
     <string name="title_activity_dashboard">Dashboard</string>
-    <string name="name_of_user">nameofuser</string>
+    <string name="name_of_user" translatable="false">nameofuser</string>
     <string name="welcome_note">Welcome,</string>
     <string name="prompt_location_on">Your GPS seems to be disabled, do you want to enable it?</string>
-    <string name="table_users">users</string>
-    <string name="table_users_history">userHistory</string>
+    <string name="table_users" translatable="false">users</string>
+    <string name="table_users_history" translatable="false">userHistory</string>
     <string name="text_date_time">Date :</string>
     <string name="text_latitude">Latitude</string>
     <string name="text_longitude">Longitude</string>

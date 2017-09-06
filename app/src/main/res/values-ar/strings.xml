@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">تجريبي التطبيق</string>
+    <string name="action_logout">الخروج</string>
+    <string name="action_register">تسجيل</string>
+    <string name="action_sign_in">تسجيل الدخول</string>
+    <string name="action_sign_in_short">تسجيل الدخول</string>
+    <string name="authenticating">المصادقة.</string>
+    <string name="authentication_failed">المصادقة فشلت</string>
+    <string name="error_invalid_email">بريد إلكتروني خاطئ.</string>
+    <string name="error_mandatory">* إلزامية</string>
+    <string name="error_password">كلمة السر غير متطابقة !</string>
+    <string name="error_registration">جميع الحقول إلزامية</string>
+    <string name="fetching_history">جار جلب سجل المستخدم.</string>
+    <string name="google">متابعة مع جوجل</string>
+    <string name="message_dialog_registering">تسجيل المستخدم.</string>
+    <string name="message_dialog_signing_in">تسجيل الدخول .</string>
+    <string name="promps_double_back">الرجاء النقر مرة أخرى مرة أخرى للخروج</string>
+    <string name="prompt_confirm_password">تأكيد كلمة المرور</string>
+    <string name="prompt_email">البريد الإلكتروني</string>
+    <string name="prompt_location_on">يبدو أن نظام تحديد المواقع الخاص بك معطل، هل تريد تمكينه؟</string>
+    <string name="prompt_name">اسم</string>
+    <string name="prompt_password">كلمه السر</string>
+    <string name="sign_in_facebook">تواصل مع الفيسبوك</string>
+    <string name="sign_out">خروج</string>
+    <string name="text_date_time">تاريخ :</string>
+    <string name="text_history">سجل تسجيل الدخول</string>
+    <string name="text_latitude">خط العرض</string>
+    <string name="text_longitude">خط الطول</string>
+    <string name="title_activity_dashboard">لوحة القيادة</string>
+    <string name="welcome_note">أهلا بك،</string>
+</resources>
