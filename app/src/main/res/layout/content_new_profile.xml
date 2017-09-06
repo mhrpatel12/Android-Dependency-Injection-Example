@@ -9,12 +9,11 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
-        android:padding="@dimen/fab_margin">
+        android:padding="@dimen/padding_text">
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:padding="@dimen/padding_text"
             android:text="@string/welcome_note"
             android:textColor="@android:color/black" />
 
@@ -22,17 +21,26 @@
             android:id="@+id/txtNameOfUser"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:padding="@dimen/padding_text"
+            android:paddingStart="@dimen/padding_text"
             android:textColor="@android:color/black" />
 
     </LinearLayout>
+
+    <TextView
+        android:id="@+id/txtLoginHistory"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/layout_welcome"
+        android:padding="@dimen/padding_text"
+        android:text="@string/text_history"
+        android:textColor="@android:color/black" />
 
     <android.support.v7.widget.RecyclerView
         android:id="@+id/recycler_view_login_history"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_above="@+id/btnLogout"
-        android:layout_below="@+id/layout_welcome"
+        android:layout_below="@+id/txtLoginHistory"
         android:divider="@android:color/black"
         android:scrollbars="vertical" />
 

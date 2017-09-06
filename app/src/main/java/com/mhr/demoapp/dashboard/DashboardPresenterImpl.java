@@ -10,6 +10,8 @@ import android.support.annotation.Nullable;
 import android.support.v4.app.FragmentActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.widget.TextView;
+import android.widget.Toast;
 
 import com.facebook.login.LoginManager;
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
@@ -25,6 +27,7 @@ import com.mhr.demoapp.R;
 import com.mhr.demoapp.dashboard.adapter.UserHistoryAdapter;
 import com.mhr.demoapp.dashboard.model.UserHistory;
 import com.mhr.demoapp.data.DatabaseService;
+import com.mhr.demoapp.login.model.User;
 
 import java.util.ArrayList;
 
@@ -78,6 +81,21 @@ public class DashboardPresenterImpl implements DashboardPresenter, GoogleApiClie
         recyclerViewCommits.setAdapter(userHistoryAdapter);
 
         if (mAuth.getCurrentUser() != null) {
+            databaseService.mDatabase.child(activity.getString(R.string.table_users)).child(mAuth.getCurrentUser().getUid()).addListenerForSingleValueEvent(new ValueEventListener() {
+                @Override
+                public void onDataChange(DataSnapshot dataSnapshot) {
+                    if (dataSnapshot.exists()) {
+                        User user = dataSnapshot.getValue(User.class);
+                        ((TextView) activity.findViewById(R.id.txtNameOfUser)).setText(user.userName);
+                        Toast.makeText(activity, activity.getString(R.string.welcome_note) + " " + user.userName, Toast.LENGTH_LONG).show();
+                    }
+                }
+
+                @Override
+                public void onCancelled(DatabaseError databaseError) {
+                    hideProgress();
+                }
+            });
             databaseService.mDatabase.child(activity.getString(R.string.table_users_history)).
                     child(mAuth.getCurrentUser().getUid())
                     .addValueEventListener(new ValueEventListener() {
@@ -96,7 +114,7 @@ public class DashboardPresenterImpl implements DashboardPresenter, GoogleApiClie
 
                         @Override
                         public void onCancelled(DatabaseError databaseError) {
-
+                            hideProgress();
                         }
                     });
         }

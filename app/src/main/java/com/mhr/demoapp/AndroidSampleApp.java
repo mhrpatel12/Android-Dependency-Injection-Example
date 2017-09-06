@@ -3,6 +3,7 @@ package com.mhr.demoapp;
 import android.app.Activity;
 import android.app.Application;
 
+import com.facebook.FacebookSdk;
 import com.mhr.demoapp.di.DaggerAppComponent;
 
 import javax.inject.Inject;
@@ -27,7 +28,7 @@ public class AndroidSampleApp extends Application implements HasActivityInjector
                 .application(this)
                 .build()
                 .inject(this);
-
+        FacebookSdk.sdkInitialize(getApplicationContext());
     }
 
     @Override

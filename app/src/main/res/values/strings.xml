@@ -30,4 +30,6 @@
     <string name="action_logout">LOGOUT</string>
     <string name="error_mandatory">* mandatory</string>
     <string name="error_invalid_email">Invalid Email.</string>
+    <string name="promps_double_back">Please click BACK again to exit</string>
+    <string name="text_history">Your login history</string>
 </resources>

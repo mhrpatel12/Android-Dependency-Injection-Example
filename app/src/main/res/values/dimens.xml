@@ -7,4 +7,5 @@
     <dimen name="fab_margin">16dp</dimen>
     <dimen name="padding_text">5dp</dimen>
     <dimen name="padding_layout">3dp</dimen>
+    <dimen name="card_margin">5dp</dimen>
 </resources>
