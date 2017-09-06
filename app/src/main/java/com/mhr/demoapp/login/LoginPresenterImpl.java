@@ -86,7 +86,7 @@ public class LoginPresenterImpl implements LoginPresenter, GoogleApiClient.Conne
         this.mainView = loginView;
         this.databaseService = databaseService;
         this.activity = activity;
-        progressDialog = new ProgressDialog(activity);
+        progressDialog = new ProgressDialog(activity, R.style.dialog);
         progressDialog.setCancelable(false);
     }
 

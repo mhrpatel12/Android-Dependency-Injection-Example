@@ -2,21 +2,21 @@ package com.mhr.demoapp.login;
 
 import android.content.Context;
 import android.content.Intent;
-import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.design.widget.Snackbar;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.AppCompatButton;
-import android.util.Base64;
 import android.util.DisplayMetrics;
 import android.util.Log;
 import android.util.TypedValue;
 import android.view.View;
 import android.view.ViewTreeObserver;
 import android.widget.LinearLayout;
+import android.widget.TextView;
 
 import com.facebook.CallbackManager;
 import com.facebook.FacebookCallback;
@@ -32,9 +32,6 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.mhr.demoapp.R;
 import com.mhr.demoapp.dashboard.DashboardActivity;
-
-import java.security.MessageDigest;
-import java.security.NoSuchAlgorithmException;
 
 import javax.inject.Inject;
 
@@ -113,6 +110,10 @@ public class LoginActivity extends AppCompatActivity implements LoginView {
             if (result.isSuccess()) {
                 GoogleSignInAccount account = result.getSignInAccount();
                 loginPresenter.firebaseAuthWithGoogle(account);
+            } else {
+                Snackbar snackbar = Snackbar.make(((View) findViewById(R.id.rootView)), result.toString() + "", Snackbar.LENGTH_INDEFINITE);
+                ((TextView) snackbar.getView().findViewById(android.support.design.R.id.snackbar_text)).setSingleLine(false);
+                snackbar.show();
             }
         }
     }
@@ -141,19 +142,7 @@ public class LoginActivity extends AppCompatActivity implements LoginView {
 
     @Override
     public void onLoginLoaded(GoogleApiClient googleApiClient, CallbackManager mCallbackManager, FirebaseAuth mAuth) {
-        try {
-            PackageInfo info = getPackageManager().getPackageInfo(getApplicationContext().getPackageName(), PackageManager.GET_SIGNATURES);
-            for (android.content.pm.Signature signature : info.signatures) {
-                MessageDigest md = MessageDigest.getInstance("SHA");
-                md.update(signature.toByteArray());
-                String sign = new String(Base64.encode(md.digest(), 0));
-                Log.d("MY KEY HASH:", sign);
-                //  Toast.makeText(getApplicationContext(),sign,     Toast.LENGTH_LONG).show();
-            }
-        } catch (PackageManager.NameNotFoundException e) {
-        } catch (NoSuchAlgorithmException e) {
-        }
-
+        loginPresenter.hideKeyboard();
         this.mAuth = mAuth;
         this.googleApiClient = googleApiClient;
         this.mCallbackManager = mCallbackManager;

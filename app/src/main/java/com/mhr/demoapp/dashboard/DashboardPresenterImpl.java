@@ -60,7 +60,7 @@ public class DashboardPresenterImpl implements DashboardPresenter, GoogleApiClie
         this.mainView = loginView;
         this.databaseService = databaseService;
         this.activity = activity;
-        progressDialog = new ProgressDialog(activity);
+        progressDialog = new ProgressDialog(activity, R.style.dialog);
         progressDialog.setCancelable(false);
     }
 

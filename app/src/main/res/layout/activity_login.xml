@@ -68,7 +68,8 @@
                     android:layout_height="wrap_content"
                     android:layout_marginTop="16dp"
                     android:onClick="onClickSignIn"
-                    android:text="@string/action_sign_in" />
+                    android:text="@string/action_sign_in"
+                    android:textColor="@color/green_back" />
 
                 <Button
                     android:id="@+id/btn_sign_in_google"
@@ -76,7 +77,8 @@
                     android:layout_height="wrap_content"
                     android:drawableStart="@drawable/ic_google"
                     android:onClick="onClickSignInGoogle"
-                    android:text="@string/google" />
+                    android:text="@string/google"
+                    android:textColor="@color/green_back" />
 
                 <android.support.v7.widget.AppCompatButton
                     android:id="@+id/button_facebook"
@@ -86,7 +88,8 @@
                     android:elevation="1dp"
                     android:padding="15dp"
                     android:text="@string/sign_in_facebook"
-                    android:textAlignment="center" />
+                    android:textAlignment="center"
+                    android:textColor="@color/green_back" />
 
                 <RelativeLayout
                     android:id="@+id/layout_facebook"
@@ -195,7 +198,8 @@
                     android:layout_height="wrap_content"
                     android:layout_marginTop="16dp"
                     android:onClick="onClickRegister"
-                    android:text="@string/action_register" />
+                    android:text="@string/action_register"
+                    android:textColor="@color/green_back" />
 
             </LinearLayout>
 
@@ -220,12 +224,12 @@
             android:onClick="onClickLayout"
             android:padding="@dimen/padding_txt_button"
             android:text="@string/action_sign_in"
-            android:textStyle="bold" />
+            android:textColor="@color/accent_green" />
 
         <View
             android:layout_width="2dp"
             android:layout_height="match_parent"
-            android:background="@android:color/darker_gray" />
+            android:background="@color/accent_green" />
 
         <TextView
             android:id="@+id/txtRegistration"
@@ -236,7 +240,7 @@
             android:onClick="onClickLayout"
             android:padding="@dimen/padding_txt_button"
             android:text="@string/action_register"
-            android:textStyle="bold" />
+            android:textColor="@color/accent_green" />
 
     </LinearLayout>
 
